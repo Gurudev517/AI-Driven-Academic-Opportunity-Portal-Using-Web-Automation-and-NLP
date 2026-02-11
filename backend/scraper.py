@@ -1,24 +1,30 @@
+from sources import SOURCES
+import requests
+from bs4 import BeautifulSoup
 import sqlite3
-import os
+import time
+from urllib.parse import urljoin
+import urllib3
 
-# This ensures it finds the DB file in the SAME folder as the script
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DB_PATH = os.path.join(BASE_DIR, "projects.db") 
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
-def save_to_db(internships):
-    conn = sqlite3.connect(DB_PATH)  # Connect to projects.db
-    cursor = conn.cursor()
-    
-    # Create the table if it doesn't exist (Safety check!)
-    cursor.execute('''
+DB_PATH = "../database/internship.db"
+
+# ---------------- DATABASE ---------------- #
+
+def init_db():
+    conn = sqlite3.connect(DB_PATH)
+    cur = conn.cursor()
+    cur.execute("""
         CREATE TABLE IF NOT EXISTS internships (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             title TEXT,
-            company TEXT,
-            link TEXT UNIQUE,
-            date_posted TEXT
+            institute TEXT,
+            city TEXT,
+            type TEXT,
+            link TEXT UNIQUE
         )
-    ''')
+    """)
     conn.commit()
     conn.close()
 
