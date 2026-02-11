@@ -1,0 +1,24 @@
+{
+  "intents": [
+    {
+      "tag": "greeting",
+      "patterns": ["Hi", "Hello", "Hey", "Good morning", "Start"],
+      "responses": ["Hello! Ready to find a research internship?", "Hi there! I can help you search for internships at IITs and NITs."]
+    },
+    {
+      "tag": "thanks",
+      "patterns": ["Thank you", "Thanks", "Good job", "Helpful", "Cool"],
+      "responses": ["You're welcome! Let me know if you need more help.", "Glad I could help!"]
+    },
+    {
+      "tag": "about",
+      "patterns": ["Who are you?", "What is this?", "What do you do?", "Help"],
+      "responses": ["I am an AI Assistant connected to your live database. I can help you find research internships based on skills or locations."]
+    },
+    {
+      "tag": "deadlines",
+      "patterns": ["When is the deadline?", "Last date", "closing date", "date"],
+      "responses": ["Deadlines vary by institute. I recommend checking the 'Urgent Deadlines' section on the Dashboard."]
+    }
+  ]
+}

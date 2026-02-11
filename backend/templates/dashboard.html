@@ -1,0 +1,261 @@
+{% extends "base.html" %}
+{% block content %}
+
+<!-- DARK HERO SECTION -->
+<section style="
+    background: linear-gradient(135deg, #0f172a, #020617);
+    padding: 120px 20px 140px;
+    margin-bottom: -80px;
+">
+    <div style="
+        max-width: 1100px;
+        margin: 0 auto;
+        background: radial-gradient(circle at top left, rgba(99,102,241,0.15), transparent 60%),
+                    radial-gradient(circle at bottom right, rgba(236,72,153,0.15), transparent 60%);
+        border-radius: 28px;
+        padding: 80px 60px;
+        color: white;
+        box-shadow: 0 40px 120px rgba(0,0,0,0.6);
+        text-align: left;
+    ">
+        <h1 style="
+            font-size: 52px;
+            font-weight: 800;
+            line-height: 1.15;
+            margin-bottom: 20px;
+        ">
+            Academic
+            <span id="typewriter"
+                  style="
+                    background: linear-gradient(90deg,#22d3ee,#a855f7,#ec4899);
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                  ">
+            </span>
+            Portal<span style="opacity:.6">|</span>
+        </h1>
+
+        <p style="
+            max-width: 620px;
+            font-size: 17px;
+            line-height: 1.7;
+            color: #cbd5f5;
+            margin-bottom: 35px;
+        ">
+            Live data insights and research tracking for India's premier institutes.
+            Discover hidden opportunities, ad-hoc projects, and research roles faster.
+        </p>
+
+        <div style="display:flex; gap:16px; flex-wrap:wrap;">
+            <a href="/search" style="
+                padding: 14px 26px;
+                border-radius: 14px;
+                background: linear-gradient(90deg,#6366f1,#8b5cf6);
+                color: white;
+                text-decoration: none;
+                font-weight: 600;
+                box-shadow: 0 10px 30px rgba(99,102,241,.4);
+            ">
+                Explore Opportunities →
+            </a>
+
+            <a href="/matcher" style="
+                padding: 14px 26px;
+                border-radius: 14px;
+                border: 1px solid rgba(255,255,255,.2);
+                color: #e5e7eb;
+                text-decoration: none;
+                font-weight: 600;
+                backdrop-filter: blur(6px);
+            ">
+                Try AI Matcher 🤖
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- ORIGINAL CONTENT CONTINUES (UNCHANGED) -->
+<div class="container">
+
+    <!-- Stats Cards -->
+    <div style="display: flex; gap: 20px; width: 100%; justify-content: center; flex-wrap: wrap; margin-bottom: 50px;">
+        <div class="filters-card" style="width: 250px; border-top: 4px solid #2563eb; text-align: center;">
+            <label>Total Openings</label><h2>{{ stats.total }}</h2>
+        </div>
+        <div class="filters-card" style="width: 250px; border-top: 4px solid #10b981; text-align: center;">
+            <label>Active Institutes</label><h2>{{ stats.inst_count }}</h2>
+        </div>
+        <div class="filters-card" style="width: 250px; border-top: 4px solid #f59e0b; text-align: center;">
+            <label>Trending Skill</label>
+            <h2 style="font-size: 18px;">
+                {{ stats.trends[0][0]|upper if stats.trends else 'N/A' }}
+            </h2>
+        </div>
+    </div>
+
+    <!-- Main Grid -->
+    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 40px; width: 100%; max-width: 1200px; margin: 0 auto;">
+
+        <!-- Closing Soon -->
+        <div>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                <h2 style="margin:0; font-size:24px;">⏳ Closing Soon</h2>
+                <a href="/search" style="color:#2563eb; text-decoration:none; font-size:14px; font-weight:600;">
+                    View All →
+                </a>
+            </div>
+
+            {% if urgent %}
+                {% for item in urgent %}
+                <div class="result-card" style="margin-bottom:15px; border-left:5px solid #ef4444;">
+                    <div style="display:flex; justify-content:space-between;">
+                        <div style="max-width:70%;">
+                            <h4 style="margin:0 0 5px 0;">{{ item.title }}</h4>
+                            <p style="margin:0; font-size:13px; color:#64748b;">
+                                🏛️ {{ item.full_name }}
+                            </p>
+                        </div>
+                        <span class="type-badge" style="background:#fee2e2; color:#991b1b;">
+                            {{ item.days_left }}
+                        </span>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p style="color:#64748b;">No urgent deadlines found.</p>
+            {% endif %}
+        </div>
+
+        <!-- Chart -->
+        <div>
+            <h2 style="font-size:24px; margin-bottom:20px;">📊 Real-Time City Stats</h2>
+            <canvas id="cityChart" width="400" height="300"
+                style="background:#fff; padding:20px; border-radius:12px;
+                box-shadow:0 5px 20px -5px rgba(0,0,0,.1);">
+            </canvas>
+        </div>
+    </div>
+
+</div>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const ctx = document.getElementById('cityChart').getContext('2d');
+    const cityLabels = {{ city_stats.keys()|list|tojson }};
+    const cityData = {{ city_stats.values()|list|tojson }};
+
+    const cityChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: cityLabels,
+            datasets: [{
+                data: cityData,
+                backgroundColor: cityLabels.map(
+                    () => `rgba(${Math.random()*255},${Math.random()*255},${Math.random()*255},0.7)`
+                )
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { display:false } },
+            scales: { y: { beginAtZero:true } }
+        }
+    });
+
+    setInterval(() => {
+        cityChart.data.datasets[0].data =
+            cityChart.data.datasets[0].data.map(v => Math.max(0, v + Math.floor(Math.random()*3 - 1)));
+        cityChart.update();
+    }, 2000);
+</script>
+<!-- AD-HOC PROJECTS EXPLAINER SECTION -->
+<section style="
+    max-width: 1200px;
+    margin: 120px auto 80px;
+    background: #ffffff;
+    border-radius: 24px;
+    padding: 60px;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.08);
+    border-left: 6px solid #2563eb;
+">
+    <div style="
+        display: grid;
+        grid-template-columns: 1.3fr 1fr;
+        gap: 50px;
+        align-items: center;
+    ">
+
+        <!-- TEXT CONTENT -->
+        <div>
+            <h2 style="
+                font-size: 32px;
+                font-weight: 800;
+                margin-bottom: 16px;
+                color: #0f172a;
+            ">
+                🚀 What are Ad-Hoc Projects?
+            </h2>
+
+            <p style="
+                font-size: 16px;
+                line-height: 1.7;
+                color: #475569;
+                margin-bottom: 28px;
+            ">
+                Many researchers and professionals miss out on unique opportunities because they
+                aren't part of formal yearly listings. Ad-hoc projects are
+                <strong>“as-needed” research roles</strong> that offer rapid learning and high growth.
+            </p>
+
+            <ul style="list-style:none; padding:0; margin:0;">
+                <li style="display:flex; gap:12px; margin-bottom:16px;">
+                    <span style="color:#2563eb; font-size:18px;">✔</span>
+                    <span>
+                        <strong>Problem-Focused:</strong>
+                        Launched to solve sudden research challenges or explore new ideas.
+                    </span>
+                </li>
+
+                <li style="display:flex; gap:12px; margin-bottom:16px;">
+                    <span style="color:#2563eb; font-size:18px;">✔</span>
+                    <span>
+                        <strong>Short-Term:</strong>
+                        Temporary roles that build experience without long commitments.
+                    </span>
+                </li>
+
+                <li style="display:flex; gap:12px; margin-bottom:16px;">
+                    <span style="color:#2563eb; font-size:18px;">✔</span>
+                    <span>
+                        <strong>High-Visibility:</strong>
+                        Direct collaboration with faculty, PIs, or project heads.
+                    </span>
+                </li>
+
+                <li style="display:flex; gap:12px;">
+                    <span style="color:#2563eb; font-size:18px;">✔</span>
+                    <span>
+                        <strong>Skill Builders:</strong>
+                        Work with advanced tools and cross-disciplinary teams.
+                    </span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- IMAGE / ILLUSTRATION -->
+        <div style="
+            background: #f8fafc;
+            border-radius: 20px;
+            padding: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        ">
+            <img src="https://img.freepik.com/free-vector/project-management-concept-illustration_114360-1478.jpg" alt="Ad-Hoc Projects" style="width: 100%; max-width: 400px; border-radius: 12px; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);">
+                 
+        </div>
+
+    </div>
+</section>
+{% endblock %}

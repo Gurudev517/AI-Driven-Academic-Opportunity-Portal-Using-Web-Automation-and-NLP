@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="filters-card">
+        <h2>Manual Search</h2>
+        <form method="GET" action="/search">
+            <label>City</label>
+            <select name="city">
+                <option value="">All Cities</option>
+                {% for city in cities %}
+                <option value="{{ city }}" {% if request.args.get('city') == city %}selected{% endif %}>{{ city }}</option>
+                {% endfor %}
+            </select>
+
+            <label>Institute</label>
+            <select name="institute">
+                <option value="">All Institutes</option>
+                {% for inst in institutes %}
+                <option value="{{ inst }}" {% if request.args.get('institute') == inst %}selected{% endif %}>{{ inst }}</option>
+                {% endfor %}
+            </select>
+
+            <label>Keywords</label>
+            <input type="text" name="skills" value="{{ request.args.get('skills', '') }}" placeholder="AI, Physics, Python">
+
+            <button type="submit">Filter Results</button>
+            <a href="/search" style="display: block; text-align: center; margin-top: 10px; color: #64748b; font-size: 13px; text-decoration: none;">Reset Filters</a>
+        </form>
+    </div>
+
+    <div class="filters-card" style="max-width: 800px; margin: 40px auto; padding: 30px; border-left: 5px solid #10b981; background: #fff;">
+        <div style="display: flex; gap: 30px; align-items: center; flex-wrap: wrap;">
+            <div style="width: 180px; flex-shrink: 0; margin: 0 auto;">
+                <img src="https://img.freepik.com/free-vector/searching-concept-illustration_114360-1554.jpg" alt="Manual Search" style="width: 100%; border-radius: 12px;">
+            </div>
+            <div style="flex: 1; min-width: 300px;">
+                <h3 style="margin-top: 0; color: #0f172a; font-size: 20px;">🔍 Refine Your Search</h3>
+                <p style="font-size: 14px; color: #64748b; line-height: 1.6;">
+                    Looking for something specific? Use manual filters to drill down into the exact location and institute you're targeting.
+                </p>
+                <ul style="list-style: none; padding: 0; margin: 0; font-size: 13px; color: #334155;">
+                    <li style="margin-bottom: 8px; display: flex; align-items: center;">
+                        <span style="color: #10b981; margin-right: 10px;">✔</span>
+                        <span><strong>Keyword Tip:</strong> Try searching for "Remote" or "Project Assistant".</span>
+                    </li>
+                    <li style="margin-bottom: 8px; display: flex; align-items: center;">
+                        <span style="color: #10b981; margin-right: 10px;">✔</span>
+                        <span><strong>City Focus:</strong> Limit results to specific research hubs like Bangalore or Delhi.</span>
+                    </li>
+                    <li style="margin-bottom: 8px; display: flex; align-items: center;">
+                        <span style="color: #10b981; margin-right: 10px;">✔</span>
+                        <span><strong>Direct Access:</strong> Use "View Details" to go straight to the official notification.</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="results">
+    {% if show_results %}
+        <h2 style="text-align: center; margin-bottom: 30px;">Matches Found: {{ internships|length }}</h2>
+        {% for item in internships %}
+        <div class="result-card" style="margin-bottom: 20px;">
+            <span class="type-badge">{{ item.opp_type }}</span>
+            <span class="type-badge" style="background: #f1f5f9; color: #475569; margin-left: 10px;">{{ item.days_left }}</span>
+            <h3>{{ item.title }}</h3>
+            <p>🏛️ {{ item.full_name }} | 📍 {{ item.city_name }}</p>
+            <div class="result-bottom">
+                <span style="font-size: 13px; color: #64748b;">📧 {{ item.email }}</span>
+                <a href="{{ item.link }}" target="_blank" style="background: #2563eb; color: white; padding: 8px 15px; border-radius: 6px; text-decoration: none; font-size: 13px;">View Details →</a>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <p style="text-align: center; color: #64748b; margin-top: 50px;">Select filters above to see available research positions.</p>
+    {% endif %}
+</section>
+{% endblock %}
