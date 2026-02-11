@@ -12,10 +12,12 @@ from dateutil import parser
 
 app = Flask(__name__)
 
-# --- CONFIGURATION ---
-UPLOAD_FOLDER = 'uploads'
-DB_NAME = 'projects.db'
-if not os.path.exists(UPLOAD_FOLDER): os.makedirs(UPLOAD_FOLDER)
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DB_PATH = os.path.join(BASE_DIR, "projects.db") 
+
+app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_PATH}'
+# OR if using raw sqlite3:
+# conn = sqlite3.connect(DB_PATH)
 
 # Full Institute List
 INST_MAP = {
