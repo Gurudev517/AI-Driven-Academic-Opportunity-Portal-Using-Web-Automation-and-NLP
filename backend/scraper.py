@@ -8,7 +8,7 @@ import urllib3
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
-DB_PATH = "../database/internship.db"
+DB_PATH = "../database/projects.db"
 
 # ---------------- DATABASE ---------------- #
 
