@@ -1,128 +1,96 @@
-from sources import SOURCES
+import os
 import requests
 from bs4 import BeautifulSoup
 import sqlite3
 import time
 from urllib.parse import urljoin
 import urllib3
+from datetime import datetime
+
+# Import SOURCES from your local file
+try:
+    from sources import SOURCES
+except ImportError:
+    # Fallback for testing if sources.py is missing
+    SOURCES = [{"institute": "IITM", "url": "https://www.iitm.ac.in/hiring", "city": "Chennai", "type": "Research"}]
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
-DB_PATH = "../database/internship.db"
-
-# ---------------- DATABASE ---------------- #
+# --- SYNCHRONIZED PATH ---
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DB_PATH = os.path.join(BASE_DIR, "projects.db")
 
 def init_db():
     conn = sqlite3.connect(DB_PATH)
     cur = conn.cursor()
+    # Table name and Columns MUST match app.py
     cur.execute("""
-        CREATE TABLE IF NOT EXISTS internships (
+        CREATE TABLE IF NOT EXISTS postings (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
+            institute_code TEXT,
             title TEXT,
-            institute TEXT,
-            city TEXT,
-            type TEXT,
-            link TEXT UNIQUE
+            skills TEXT,
+            deadline DATE,
+            link TEXT UNIQUE,
+            email TEXT,
+            posted_on DATE
         )
     """)
     conn.commit()
     conn.close()
 
-# ---------------- SCRAPER ---------------- #
-
 def scrape_site(source):
-    print(f"\n🔍 Scraping: {source['institute']}")
-
+    print(f"🔍 Scraping: {source['institute']}")
     try:
-        response = requests.get(
-            source["url"],
-            timeout=20,
-            verify=False,
-            headers={"User-Agent": "Mozilla/5.0"}
-        )
+        response = requests.get(source["url"], timeout=20, verify=False, headers={"User-Agent": "Mozilla/5.0"})
         response.raise_for_status()
     except Exception as e:
-        print(f"❌ Failed: {source['url']} → {e}")
+        print(f"❌ Failed: {e}")
         return []
 
     soup = BeautifulSoup(response.text, "html.parser")
     results = []
-
-    positive_keywords = [
-        "intern",
-        "internship",
-        "summer",
-        "project",
-        "research",
-        "application",
-        "apply"
-    ]
-
-    negative_keywords = [
-        "login", "email", "contact", "privacy",
-        "committee", "report", "evaluation",
-        "certificate", "guidelines", "form",
-        "menu", "footer"
-    ]
+    keywords = ["intern", "internship", "summer", "project", "research", "jrf", "srf"]
 
     for a in soup.find_all("a", href=True):
         title = a.get_text(strip=True)
-        href = a["href"]
-
-        if not title or len(title) < 8:
-            continue
-
-        link = urljoin(source["url"], href)
-        text = f"{title.lower()} {link.lower()}"
-
-        # reject noise
-        if any(nk in text for nk in negative_keywords):
-            continue
-
-        # accept opportunity-like links
-        if not any(pk in text for pk in positive_keywords):
-            continue
-
-        results.append((
-            title,
-            source["institute"],
-            source["city"],
-            source["type"],
-            link
-        ))
-
-    print(f"✅ Found {len(results)} items")
+        if len(title) < 10: continue
+        
+        link = urljoin(source["url"], a["href"])
+        if any(k in title.lower() for k in keywords):
+            # Mapping Scraped Data -> app.py columns
+            results.append({
+                "institute_code": source["institute"],
+                "title": title,
+                "skills": "See link for details",
+                "deadline": "Check PDF",
+                "link": link,
+                "email": "contact@institute.ac.in",
+                "posted_on": datetime.now().strftime('%Y-%m-%d')
+            })
     return results
 
-
-# ---------------- SAVE ---------------- #
-
 def save_to_db(data):
-    if not data:
-        return
-
+    if not data: return
     conn = sqlite3.connect(DB_PATH)
     cur = conn.cursor()
-
-    cur.executemany("""
-        INSERT OR IGNORE INTO internships
-        (title, institute, city, type, link)
-        VALUES (?, ?, ?, ?, ?)
-    """, data)
-
+    for item in data:
+        try:
+            cur.execute("""
+                INSERT OR IGNORE INTO postings 
+                (institute_code, title, skills, deadline, link, email, posted_on)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
+            """, (item['institute_code'], item['title'], item['skills'], item['deadline'], item['link'], item['email'], item['posted_on']))
+        except Exception as e: print(f"DB Error: {e}")
     conn.commit()
     conn.close()
 
-# ---------------- MAIN ---------------- #
-
 if __name__ == "__main__":
     init_db()
-
     total = 0
     for source in SOURCES:
         data = scrape_site(source)
         save_to_db(data)
         total += len(data)
-        time.sleep(5)  # ethical scraping
-
-    print(f"\n✅ Total internships saved: {total}")
+        time.sleep(2)
+    print(f"✅ Total synchronized entries: {total}")
