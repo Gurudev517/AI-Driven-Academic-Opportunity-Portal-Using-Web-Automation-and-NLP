@@ -1,0 +1,376 @@
+/* =========================
+   GLOBAL RESET
+========================= */
+
+* {
+    box-sizing: border-box;
+    font-family: "Segoe UI", system-ui, sans-serif;
+}
+
+body {
+    margin: 0;
+    background: #020617; /* Dark background */
+    color: #e5e7eb;
+}
+
+/* =========================
+   HERO (LEFT ALIGNED)
+========================= */
+
+.hero {
+    background: #03197b;
+}
+
+.hero-left {
+    padding: 90px 80px 60px;
+    text-align: left;
+}
+
+.hero-title {
+    font-size: 56px;
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    margin-bottom: 14px;
+    color: #f8fafc;
+}
+
+/* TYPEWRITER */
+.typewriter-text {
+    color: #2563eb;
+}
+
+.cursor {
+    color: #2563eb;
+    animation: blink 0.8s infinite;
+    font-weight: 300;
+    margin-left: 4px;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+.hero-sub {
+    font-size: 17px;
+    color: #94a3b8;
+    max-width: 640px;
+}
+
+/* =========================
+   LAYOUT
+========================= */
+
+.container {
+    display: flex;
+    gap: 30px;
+    padding: 60px 80px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* =========================
+   CARDS
+========================= */
+
+.filters-card,
+.resume-card,
+.result-card {
+    background: #020617;
+    border-radius: 14px;
+    padding: 30px;
+    width: 420px;
+    border: 1px solid #1e293b;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+}
+
+/* Skill roadmap cards (smaller + grid friendly) */
+.filters-card {
+    padding: 20px;
+}
+
+/* =========================
+   HEADINGS & TEXT
+========================= */
+
+h1, h2, h3 {
+    color: #f8fafc;
+}
+
+p {
+    color: #cbd5f5;
+    font-size: 14px;
+}
+
+/* =========================
+   FORM
+========================= */
+
+label {
+    font-size: 14px;
+    margin-top: 15px;
+    display: block;
+    color: #cbd5f5;
+}
+
+select,
+input[type="text"] {
+    width: 100%;
+    padding: 12px;
+    margin-top: 6px;
+    border-radius: 8px;
+    background: #020617;
+    border: 1px solid #1e293b;
+    color: #f8fafc;
+    outline: none;
+}
+
+select option {
+    background: #020617;
+    color: #f8fafc;
+}
+
+/* =========================
+   BUTTONS
+========================= */
+
+button {
+    margin-top: 25px;
+    width: 100%;
+    padding: 14px;
+    background: #2563eb;
+    border: none;
+    color: white;
+    font-size: 15px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+button:hover {
+    background: #1d4ed8;
+}
+
+.reset-link {
+    display: block;
+    text-align: center;
+    margin-top: 12px;
+    font-size: 13px;
+    color: #94a3b8;
+    text-decoration: none;
+}
+
+/* =========================
+   RESUME UPLOAD
+========================= */
+
+.upload-box {
+    border: 2px dashed #2563eb;
+    border-radius: 14px;
+    padding: 40px;
+    text-align: center;
+    margin-top: 20px;
+    position: relative;
+    background: rgba(37,99,235,0.05);
+}
+
+.upload-box input {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.arrow {
+    font-size: 26px;
+    color: #60a5fa;
+}
+
+.phase-text {
+    text-align: center;
+    margin-top: 12px;
+    font-size: 13px;
+    color: #94a3b8;
+}
+
+/* =========================
+   RESULTS
+========================= */
+
+.results {
+    padding: 0 80px 60px;
+}
+
+.result-card {
+    margin-bottom: 16px;
+}
+
+.result-card h3 {
+    margin: 6px 0;
+}
+
+.result-card p {
+    color: #94a3b8;
+}
+
+.result-bottom {
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid #1e293b;
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+}
+
+.result-bottom a {
+    color: #60a5fa;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+/* =========================
+   BADGE
+========================= */
+
+.type-badge {
+    font-size: 11px;
+    font-weight: 600;
+    background: rgba(37,99,235,0.15);
+    color: #93c5fd;
+    padding: 3px 8px;
+    border-radius: 6px;
+}
+
+/* =========================
+   SKILL ROADMAP GRID FIX
+========================= */
+
+/* Force vertical scroll only */
+.skills-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4 per row */
+    gap: 20px;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 1024px) {
+    .skills-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+
+    .hero-left {
+        padding: 60px 30px;
+    }
+
+    .hero-title {
+        font-size: 38px;
+    }
+
+    .container {
+        padding: 30px;
+    }
+
+    .skills-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* =========================
+   DASHBOARD – AD-HOC PROJECT SECTION FIX
+========================= */
+
+/* Ensure text visibility inside Ad-Hoc explainer */
+section ul li span {
+    color: #0f172a;
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+/* Strong text inside Ad-Hoc section */
+section ul li span strong {
+    color: #020617;
+    font-weight: 700;
+}
+
+/* Bullet check icon color consistency */
+section ul li span:first-child {
+    color: #2563eb;
+    font-size: 18px;
+}
+
+/* Improve spacing + readability */
+section ul li {
+    align-items: flex-start;
+}
+
+/* =========================
+   INSTITUTE LOGO MARQUEE
+========================= */
+
+.institute-strip {
+    max-width: 1000px;
+    margin: 60px auto 20px;
+    text-align: center;
+}
+
+.strip-title {
+    font-size: 24px;
+    color: #64748b;
+    margin-bottom: 18px;
+}
+
+.logo-marquee {
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+}
+
+.logo-track {
+    display: flex;
+    gap: 60px;
+    width: max-content;
+    animation: scroll-logos 35s linear infinite;
+}
+
+.logo-track img {
+    height: 46px;
+    opacity: 0.85;
+    transition: all 0.3s ease;
+}
+
+.logo-track img:hover {
+    transform: scale(1.05);
+}
+
+/* Smooth left-to-right animation */
+@keyframes scroll-logos {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(-50%);
+    }
+}
+
+/* Pause on hover (premium touch) */
+.logo-marquee:hover .logo-track {
+    animation-play-state: paused;
+}
+
+/* Mobile tweak */
+@media (max-width: 768px) {
+    .logo-track {
+        gap: 40px;
+    }
+
+    .logo-track img {
+        height: 36px;
+    }
+}

@@ -1,0 +1,54 @@
+{
+  "intents": [
+    {
+      "tag": "greeting",
+      "patterns": ["Hi", "Hello", "Hey", "Good morning", "Is anyone there?", "Hola"],
+      "responses": ["Hello! I am your Internship Assistant. How can I help?", "Hi there! Looking for research or industry roles?", "Greetings! Ask me about internships in Chennai, Delhi, or Mumbai."]
+    },
+    {
+      "tag": "goodbye",
+      "patterns": ["Bye", "See you", "Goodbye", "Exit", "Quit"],
+      "responses": ["Good luck with your search!", "Goodbye! Check back for new listings soon.", "See you! don't forget to apply."]
+    },
+    {
+      "tag": "thanks",
+      "patterns": ["Thanks", "Thank you", "That's helpful", "Awesome", "Cool"],
+      "responses": ["You're welcome!", "Happy to help!", "My pleasure."]
+    },
+    {
+      "tag": "capabilities",
+      "patterns": ["What can you do?", "Help", "How does this work?", "Features", "Who are you"],
+      "responses": ["I can find internships for you! Try saying 'Find Python jobs' or 'Show internships in Chennai'."]
+    },
+    {
+      "tag": "search_chennai",
+      "patterns": ["Chennai", "Madras", "Jobs in Chennai", "Internships in Chennai"],
+      "responses": ["SEARCH:Chennai"]
+    },
+    {
+      "tag": "search_bangalore",
+      "patterns": ["Bangalore", "Bengaluru", "Jobs in Bangalore", "Internships in Bangalore"],
+      "responses": ["SEARCH:Bangalore"]
+    },
+    {
+      "tag": "search_delhi",
+      "patterns": ["Delhi", "New Delhi", "NCR", "Jobs in Delhi"],
+      "responses": ["SEARCH:Delhi"]
+    },
+    {
+      "tag": "search_mumbai",
+      "patterns": ["Mumbai", "Bombay", "Jobs in Mumbai"],
+      "responses": ["SEARCH:Mumbai"]
+    },
+    {
+      "tag": "search_python",
+      "patterns": ["Python", "Coding", "Programming", "Developer"],
+      "responses": ["SEARCH:Python"]
+    },
+     {
+      "tag": "search_research",
+      "patterns": ["Research", "JRF", "PhD", "Project Assistant"],
+      "responses": ["SEARCH:Research"]
+    }
+  ]
+}

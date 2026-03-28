@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+/* ===== PAGE ===== */
+.roadmap-page {
+    background: radial-gradient(circle at top, #020617, #000);
+    min-height: 100vh;
+    padding: 40px 60px 80px;
+    color: #e5e7eb;
+    overflow-x: hidden;
+}
+
+/* ===== HEADER ===== */
+.roadmap-header {
+    text-align: center;
+    margin-bottom: 45px;
+}
+
+.roadmap-header h1 {
+    font-size: 32px;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 8px;
+}
+
+.roadmap-header p {
+    font-size: 14px;
+    color: #94a3b8;
+}
+
+/* ===== GRID ===== */
+.roadmap-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 16px;
+    max-width: 1400px;
+    margin: auto;
+}
+
+/* ===== CARD ===== */
+.roadmap-card {
+    background: linear-gradient(180deg, #020617, #01040c);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 14px;
+    padding: 12px;
+    min-height: 135px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: all 0.25s ease;
+}
+
+.roadmap-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(139,92,246,0.5);
+    box-shadow: 0 10px 30px rgba(139,92,246,0.15);
+}
+
+/* ===== TEXT ===== */
+.roadmap-card h3 {
+    font-size: 14.5px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 4px;
+}
+
+.roadmap-card p {
+    font-size: 12px;
+    line-height: 1.35;
+    color: #94a3b8;
+}
+
+/* ===== BUTTON ===== */
+.learn-btn {
+    align-self: flex-start;
+    background: linear-gradient(135deg, #8b5cf6, #6366f1);
+    color: #fff;
+    border: none;
+    padding: 5px 12px;
+    border-radius: 8px;
+    font-size: 11.5px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 8px;
+    text-decoration: none;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.learn-btn:hover {
+    transform: scale(1.04);
+    box-shadow: 0 4px 15px rgba(139,92,246,0.4);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 1400px) {
+    .roadmap-grid { grid-template-columns: repeat(4, 1fr); }
+}
+@media (max-width: 1100px) {
+    .roadmap-grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 768px) {
+    .roadmap-page { padding: 30px 20px; }
+    .roadmap-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 480px) {
+    .roadmap-grid { grid-template-columns: 1fr; }
+}
+</style>
+
+<div class="roadmap-page">
+
+    <div class="roadmap-header">
+        <h1>🚀 Skill Roadmap</h1>
+        <p>Learn in-demand skills with curated learning paths</p>
+    </div>
+
+    <div class="roadmap-grid">
+        {% for skill in skills %}
+        <div class="roadmap-card">
+            <div>
+                <h3>{{ skill.name }}</h3>
+                <p>{{ skill.desc }}</p>
+            </div>
+            <a href="{{ skill.link }}" target="_blank" class="learn-btn">
+                Learn →
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+
+</div>
+{% endblock %}

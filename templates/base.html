@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Academic Portal | Research Opportunities</title>
+
+    <!-- ✅ FAVICON -->
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='icon.jpeg') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='icon.jpeg') }}">
+
+    <!-- Your CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+
+        /* ===== NAVBAR ===== */
+
+        nav { 
+            background: white;
+            padding: 20px 80px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-img {
+            width: 32px;
+            height: 32px;
+        }
+
+        .logo {
+            font-weight: 800;
+            font-size: 20px;
+            color: #0f172a;
+            text-decoration: none;
+        }
+
+        .nav-links a {
+            margin-left: 25px;
+            text-decoration: none;
+            color: #475569;
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        .nav-links a:hover {
+            color: #2563eb;
+        }
+
+        /* CHAT BUTTON */
+
+        .chat-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #0d6efd, #0a58ca);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            z-index: 9999;
+            cursor: pointer;
+        }
+
+        .chat-window {
+            display: none;
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            width: 350px;
+            height: 450px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.2);
+            z-index: 9999;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+
+<!-- ✅ NAVBAR -->
+
+<nav>
+
+    <div class="nav-left">
+
+        <!-- microscope icon -->
+        <img src="{{ url_for('static', filename='icon.jpeg') }}" class="logo-img">
+
+        <a href="/" class="logo">
+            AcademicPortal
+        </a>
+
+    </div>
+
+    <div class="nav-links">
+
+        <a href="/">Dashboard</a>
+        <a href="/search">Manual Search</a>
+        <a href="/matcher">AI Matcher</a>
+        <a href="/roadmap">Skill Roadmap</a>
+
+    </div>
+
+</nav>
+
+
+
+{% block content %}
+
+{% endblock %}
+
+
+<!-- CHAT BUTTON -->
+<button id="chat-launcher" class="chat-btn" onclick="toggleChat()">💬</button>
+
+<!-- CHAT WINDOW -->
+<div id="chat-window" class="chat-window" style="display:none; flex-direction:column;">
+
+    <div style="background:#0d6efd;color:white;padding:15px;">
+        AI Research Assistant
+    </div>
+
+    <div id="chat-messages" style="flex:1;padding:15px;overflow-y:auto;"></div>
+
+    <div style="padding:15px;">
+        <input type="text" id="user-input" placeholder="Type your query..."
+        style="width:100%;padding:8px;">
+    </div>
+
+</div>
+
+<script>
+
+function toggleChat(){
+    const chat=document.getElementById("chat-window");
+    chat.style.display = chat.style.display === "flex" ? "none" : "flex";
+}
+
+const inputBox = document.getElementById("user-input");
+const chatMessages = document.getElementById("chat-messages");
+
+inputBox.addEventListener("keypress", function(e){
+    if(e.key === "Enter"){
+        sendMessage();
+    }
+});
+
+function sendMessage(){
+
+    const message = inputBox.value.trim();
+    if(!message) return;
+
+    chatMessages.innerHTML += `<div style="margin-bottom:10px;"><b>You:</b> ${message}</div>`;
+
+    fetch("/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: message })
+    })
+    .then(response => response.json())
+    .then(data => {
+        chatMessages.innerHTML += `<div style="margin-bottom:15px;"><b>AI:</b><br>${data.response}</div>`;
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    })
+    .catch(error => {
+        chatMessages.innerHTML += `<div><b>AI:</b> Server error.</div>`;
+    });
+
+    inputBox.value = "";
+}
+
+</script>
+
+
+
+
+<!-- ✅ TYPEWRITER SCRIPT FIXED -->
+
+<script>
+
+const words = [
+" Research",
+" Internship",
+" Fellowship",
+" Opportunities"
+];
+
+let wordIndex = 0;
+let charIndex = 0;
+let isDeleting = false;
+
+function typeEffect(){
+
+const element = document.getElementById("typewriter");
+
+if(!element) return;
+
+let current = words[wordIndex];
+
+if(isDeleting){
+
+element.innerHTML = current.substring(0,charIndex--);
+
+}else{
+
+element.innerHTML = current.substring(0,charIndex++);
+
+}
+
+if(!isDeleting && charIndex === current.length){
+
+isDeleting = true;
+setTimeout(typeEffect,1000);
+return;
+
+}
+
+if(isDeleting && charIndex === 0){
+
+isDeleting = false;
+wordIndex = (wordIndex+1)%words.length;
+
+}
+
+setTimeout(typeEffect,isDeleting?50:100);
+
+}
+
+document.addEventListener("DOMContentLoaded",typeEffect);
+
+</script>
+
+
+
+<!-- CHAT SCRIPT -->
+
+<script>
+
+function toggleChat(){
+
+const chat=document.getElementById("chat-window");
+
+chat.style.display=chat.style.display==="flex"?"none":"flex";
+
+}
+
+</script>
+
+
+
+</body>
+
+</html>
